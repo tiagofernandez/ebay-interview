@@ -60,9 +60,9 @@ public class BoardTests {
     public void shouldErrorOnInvalidInput() throws Exception {
         Board b = new Board();
         Integer[][] fields = createTestBoard();
+        fields[0][0] = 10;
         b.setFields(fields);
 
-        fields[0][0] = 10;
         HttpEntity<String> entity = new HttpEntity<String>(toJson(b), headers);
         ResponseEntity<String> response = restTemplate.exchange(
             "/board/validate",
@@ -92,10 +92,9 @@ public class BoardTests {
     public void shouldErrorOnInvalidBoardRow() throws Exception {
         Board b = new Board();
         Integer[][] fields = createTestBoard();
-        b.setFields(fields);
-
         fields[0][0] = 1;
         fields[0][1] = 1;
+        b.setFields(fields);
 
         HttpEntity<String> entity = new HttpEntity<String>(toJson(b), headers);
         ResponseEntity<String> response = restTemplate.exchange(
@@ -112,10 +111,9 @@ public class BoardTests {
     public void shouldErrorOnInvalidBoardColumn() throws Exception {
         Board b = new Board();
         Integer[][] fields = createTestBoard();
-        b.setFields(fields);
-
         fields[0][0] = 1;
         fields[1][0] = 1;
+        b.setFields(fields);
 
         HttpEntity<String> entity = new HttpEntity<String>(toJson(b), headers);
         ResponseEntity<String> response = restTemplate.exchange(
@@ -132,10 +130,9 @@ public class BoardTests {
     public void shouldErrorOnInvalidBoardCell() throws Exception {
         Board b = new Board();
         Integer[][] fields = createTestBoard();
-        b.setFields(fields);
-
         fields[0][0] = 1;
         fields[1][1] = 1;
+        b.setFields(fields);
 
         HttpEntity<String> entity = new HttpEntity<String>(toJson(b), headers);
         ResponseEntity<String> response = restTemplate.exchange(
@@ -153,10 +150,9 @@ public class BoardTests {
         Board b = new Board();
         b.setId("abc");
         Integer[][] fields = createTestBoard();
-        b.setFields(fields);
-
         fields[0][0] = 1;
         fields[1][1] = 1;
+        b.setFields(fields);
 
         HttpEntity<String> entity = new HttpEntity<>(toJson(b), headers);
         ResponseEntity<String> response = restTemplate.exchange(
@@ -196,8 +192,10 @@ public class BoardTests {
     public void shouldMaintainBoardState() throws Exception {
         ResponseEntity<Board> initial = restTemplate.getForEntity("/board", Board.class);
         Board board = initial.getBody();
-        assertThat(board.getFields()[0][3], is(nullValue()));
-        board.getFields()[0][3] = 1;
+        Integer[][] fields = board.getFields();
+        assertThat(fields[0][3], is(nullValue()));
+        fields[0][3] = 1;
+        board.setFields(fields);
         HttpEntity<String> toValidate = new HttpEntity<>(toJson(board), headers);
         restTemplate.exchange("/board/validate", HttpMethod.PUT, toValidate, String.class);
         ResponseEntity<Board> updated = restTemplate.getForEntity("/board/" + board.getId(), Board.class);

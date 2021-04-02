@@ -21,9 +21,10 @@ public class BoardLogic {
     }
 
     private BoardState getBoardState(Board b) {
-        for (int i = 0; i < b.getFields().length; i++) {
-            for (int j = 0; j < b.getFields().length; j++) {
-                if (b.getFields()[i][j] == null) {
+        Integer[][] fields = b.getFields();
+        for (int i = 0; i < fields.length; i++) {
+            for (int j = 0; j < fields.length; j++) {
+                if (fields[i][j] == null) {
                     return BoardState.VALID;
                 }
             }
@@ -32,10 +33,11 @@ public class BoardLogic {
     }
 
     private void validateDigits(Board b, List<InvalidFieldError> errors) {
-        int length = b.getFields().length;
+        Integer[][] fields = b.getFields();
+        int length = fields.length;
         for (int i = 0; i < length; i++) {
             for (int j = 0; j < length; j++) {
-                Integer digit = b.getFields()[i][j];
+                Integer digit = fields[i][j];
                 if (digit != null && (digit < 1 || digit > 9)) {
                     errors.add(new InvalidFieldError(i, j));
                 }
@@ -44,12 +46,13 @@ public class BoardLogic {
     }
 
     private boolean validateColumns(Board b, List<InvalidFieldError> errors) {
-        int length = b.getFields().length;
+        Integer[][] fields = b.getFields();
+        int length = fields.length;
 
         for (int i = 0; i < length; i++) {
             Integer[] column = new Integer[length];
             for (int j = 0; j < length; j++) {
-                column[j] = b.getFields()[j][i];
+                column[j] = fields[j][i];
             }
             Collection<Integer> invalidIds = validatePartial(column);
             for (Integer invalidId : invalidIds) {
@@ -73,13 +76,14 @@ public class BoardLogic {
 
     private boolean validateCell(int cellCoordX, int cellCoordY, Board b, List<InvalidFieldError> errors) {
         int length = 3;
-        Integer[] digits = new Integer[b.getFields().length];
+        Integer[][] fields = b.getFields();
+        Integer[] digits = new Integer[fields.length];
         int curDigit = 0;
         int cellX = cellCoordX * 3;
         int cellY = cellCoordY * 3;
         for (int i = cellX; i < length; i++) {
             for (int j = cellY; j < length; j++) {
-                digits[curDigit++] = b.getFields()[i][j];
+                digits[curDigit++] = fields[i][j];
             }
         }
         Collection<Integer> invalidIds = validatePartial(digits);
@@ -92,8 +96,9 @@ public class BoardLogic {
     }
 
     private void validateRows(Board b, List<InvalidFieldError> errors) {
-        for (int i = 0; i < b.getFields().length; i++) {
-            Collection<Integer> invalidIds = validatePartial(b.getFields()[i]);
+        Integer[][] fields = b.getFields();
+        for (int i = 0; i < fields.length; i++) {
+            Collection<Integer> invalidIds = validatePartial(fields[i]);
             for (Integer invalidId : invalidIds) {
                 errors.add(new InvalidFieldError(i, invalidId));
             }
