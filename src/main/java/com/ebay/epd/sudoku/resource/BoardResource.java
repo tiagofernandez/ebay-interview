@@ -2,6 +2,7 @@ package com.ebay.epd.sudoku.resource;
 
 import com.ebay.epd.sudoku.game.Board;
 import com.ebay.epd.sudoku.game.SudokuService;
+import com.ebay.epd.sudoku.game.SudokuValidationException;
 import javax.validation.Valid;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
@@ -29,7 +30,7 @@ public class BoardResource {
 
     @PUT
     @Path("/validate")
-    public Response validateBoard(@Valid Board b) throws Exception {
+    public Response validateBoard(@Valid Board b) throws SudokuValidationException {
         service.validateBoard(b);
         return Response.ok(b).build();
     }
