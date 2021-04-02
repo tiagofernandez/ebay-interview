@@ -7,19 +7,17 @@ import org.springframework.stereotype.Component;
 public class BoardLogic {
 
     public BoardState isValid(Board b) throws SudokuValidationException {
-        List<InvalidFieldError> errors = new LinkedList<InvalidFieldError>();
+        List<InvalidFieldError> errors = new LinkedList<>();
 
         validateDigits(b, errors);
         validateRows(b, errors);
         validateColumns(b, errors);
         validateCells(b, errors);
 
-        if (errors.size() > 0) {
+        if (!errors.isEmpty()) {
             throw new SudokuValidationException(errors);
         }
-
-        BoardState state = getBoardState(b);
-        return state;
+        return getBoardState(b);
     }
 
     private BoardState getBoardState(Board b) {
@@ -33,13 +31,13 @@ public class BoardLogic {
         return BoardState.COMPLETED;
     }
 
-    private void validateDigits(Board b, List<InvalidFieldError> errors) throws SudokuValidationException {
+    private void validateDigits(Board b, List<InvalidFieldError> errors) {
         int length = b.getFields().length;
         for (int i = 0; i < length; i++) {
             for (int j = 0; j < length; j++) {
                 Integer digit = b.getFields()[i][j];
-                if (digit != null) {
-                    if (digit < 1 || digit > 9) errors.add(new InvalidFieldError(i, j));
+                if (digit != null && (digit < 1 || digit > 9)) {
+                    errors.add(new InvalidFieldError(i, j));
                 }
             }
         }
@@ -103,18 +101,15 @@ public class BoardLogic {
     }
 
     private Collection<Integer> validatePartial(Integer[] integers) {
-        Set<Integer> invalidIds = new HashSet();
+        Set<Integer> invalidIds = new HashSet<>();
         for (int i = 0; i < integers.length - 1; i++) {
             for (int j = i + 1; j < integers.length; j++) {
-                if (Objects.equals(integers[i], integers[j])) {
-                    if (integers[i] != null && integers[j] != null) {
-                        invalidIds.add(i);
-                        invalidIds.add(j);
-                    }
+                if (Objects.equals(integers[i], integers[j]) && integers[i] != null && integers[j] != null) {
+                    invalidIds.add(i);
+                    invalidIds.add(j);
                 }
             }
         }
-
         return invalidIds;
     }
 

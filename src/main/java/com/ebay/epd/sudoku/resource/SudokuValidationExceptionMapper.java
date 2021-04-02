@@ -3,7 +3,6 @@ package com.ebay.epd.sudoku.resource;
 import com.ebay.epd.sudoku.game.SudokuValidationException;
 import java.util.HashMap;
 import java.util.Map;
-import javax.validation.ValidationException;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.ext.ExceptionMapper;
