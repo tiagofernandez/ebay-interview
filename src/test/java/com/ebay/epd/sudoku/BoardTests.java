@@ -1,5 +1,8 @@
 package com.ebay.epd.sudoku;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.nullValue;
+import static org.junit.Assert.assertThat;
 
 import com.ebay.epd.sudoku.game.Board;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -18,23 +21,20 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.util.MultiValueMap;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.nullValue;
-import static org.junit.Assert.assertThat;
-
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = Application.class, webEnvironment = WebEnvironment.RANDOM_PORT)
 //@WebAppConfiguration
 public class BoardTests {
-
     @Autowired
     private TestRestTemplate restTemplate;
 
-    MultiValueMap<String, String> headers = new HttpHeaders() {{
-        add("Content-Type", "application/json");
-        add("Accept", "application/json");
-    }};
+    MultiValueMap<String, String> headers = new HttpHeaders() {
 
+        {
+            add("Content-Type", "application/json");
+            add("Accept", "application/json");
+        }
+    };
 
     @Test
     public void shouldReturnOkOnBoard() throws Exception {
@@ -46,7 +46,12 @@ public class BoardTests {
     public void shouldErrorOnEmptyBoardFields() throws Exception {
         Board b = new Board();
         HttpEntity<String> entity = new HttpEntity<String>(toJson(b), headers);
-        ResponseEntity<String> response = restTemplate.exchange("/board/validate", HttpMethod.PUT, entity, String.class);
+        ResponseEntity<String> response = restTemplate.exchange(
+            "/board/validate",
+            HttpMethod.PUT,
+            entity,
+            String.class
+        );
 
         assertThat(response.getStatusCodeValue(), is(400));
     }
@@ -59,20 +64,28 @@ public class BoardTests {
 
         fields[0][0] = 10;
         HttpEntity<String> entity = new HttpEntity<String>(toJson(b), headers);
-        ResponseEntity<String> response = restTemplate.exchange("/board/validate", HttpMethod.PUT, entity, String.class);
+        ResponseEntity<String> response = restTemplate.exchange(
+            "/board/validate",
+            HttpMethod.PUT,
+            entity,
+            String.class
+        );
 
         assertThat(response.getStatusCodeValue(), is(400));
     }
 
     @Test
     public void shouldErrorOnInvalidLetters() throws Exception {
-
         String fieldDescription = "fields:[['a'],[],[],[],[],[],[],[],[]]";
 
         HttpEntity<String> entity = new HttpEntity<String>(fieldDescription, headers);
-        ResponseEntity<String> response = restTemplate.exchange("/board/validate", HttpMethod.PUT, entity, String.class);
+        ResponseEntity<String> response = restTemplate.exchange(
+            "/board/validate",
+            HttpMethod.PUT,
+            entity,
+            String.class
+        );
         assertThat(response.getStatusCodeValue(), is(400));
-
     }
 
     @Test
@@ -85,12 +98,15 @@ public class BoardTests {
         fields[0][1] = 1;
 
         HttpEntity<String> entity = new HttpEntity<String>(toJson(b), headers);
-        ResponseEntity<String> response = restTemplate.exchange("/board/validate", HttpMethod.PUT, entity, String.class);
+        ResponseEntity<String> response = restTemplate.exchange(
+            "/board/validate",
+            HttpMethod.PUT,
+            entity,
+            String.class
+        );
 
         assertThat(response.getStatusCodeValue(), is(400));
-
     }
-
 
     @Test
     public void shouldErrorOnInvalidBoardColumn() throws Exception {
@@ -102,7 +118,12 @@ public class BoardTests {
         fields[1][0] = 1;
 
         HttpEntity<String> entity = new HttpEntity<String>(toJson(b), headers);
-        ResponseEntity<String> response = restTemplate.exchange("/board/validate", HttpMethod.PUT, entity, String.class);
+        ResponseEntity<String> response = restTemplate.exchange(
+            "/board/validate",
+            HttpMethod.PUT,
+            entity,
+            String.class
+        );
 
         assertThat(response.getStatusCodeValue(), is(400));
     }
@@ -117,11 +138,15 @@ public class BoardTests {
         fields[1][1] = 1;
 
         HttpEntity<String> entity = new HttpEntity<String>(toJson(b), headers);
-        ResponseEntity<String> response = restTemplate.exchange("/board/validate", HttpMethod.PUT, entity, String.class);
+        ResponseEntity<String> response = restTemplate.exchange(
+            "/board/validate",
+            HttpMethod.PUT,
+            entity,
+            String.class
+        );
 
         assertThat(response.getStatusCodeValue(), is(400));
     }
-
 
     @Test
     public void shouldDescribeErrorOnInvalidBoard() throws Exception {
@@ -134,16 +159,19 @@ public class BoardTests {
         fields[1][1] = 1;
 
         HttpEntity<String> entity = new HttpEntity<>(toJson(b), headers);
-        ResponseEntity<String> response = restTemplate.exchange("/board/validate", HttpMethod.PUT, entity, String.class);
+        ResponseEntity<String> response = restTemplate.exchange(
+            "/board/validate",
+            HttpMethod.PUT,
+            entity,
+            String.class
+        );
 
         assertThat(response.getStatusCodeValue(), is(400));
         assertThat(JsonPath.compile("$.errors[0].x").read(response.getBody()), is(0));
         assertThat(JsonPath.compile("$.errors[0].y").read(response.getBody()), is(0));
         assertThat(JsonPath.compile("$.errors[1].x").read(response.getBody()), is(1));
         assertThat(JsonPath.compile("$.errors[1].y").read(response.getBody()), is(1));
-
     }
-
 
     @Test
     public void shouldSuccessOnValidBoard() throws Exception {
@@ -152,9 +180,13 @@ public class BoardTests {
         Integer[][] fields = createTestBoard();
         b.setFields(fields);
 
-
         HttpEntity<String> entity = new HttpEntity<>(toJson(b), headers);
-        ResponseEntity<String> response = restTemplate.exchange("/board/validate", HttpMethod.PUT, entity, String.class);
+        ResponseEntity<String> response = restTemplate.exchange(
+            "/board/validate",
+            HttpMethod.PUT,
+            entity,
+            String.class
+        );
 
         assertThat(response.getStatusCodeValue(), is(200));
         assertThat(JsonPath.compile("$.state").read(response.getBody()), is("VALID"));
@@ -174,7 +206,6 @@ public class BoardTests {
         ResponseEntity<Board> newGame = restTemplate.getForEntity("/board", Board.class);
         assertThat(newGame.getBody().getFields()[0][3], is(nullValue()));
     }
-
 
     private String toJson(Board b) throws JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();

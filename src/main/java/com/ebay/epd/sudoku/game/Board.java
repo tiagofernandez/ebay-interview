@@ -3,13 +3,11 @@ package com.ebay.epd.sudoku.game;
 import javax.validation.constraints.NotNull;
 
 public class Board {
-
     @NotNull
     private String id;
 
     @NotNull
     private Integer[][] fields;
-
 
     public String dealsLink;
     private BoardState state = BoardState.VALID;
