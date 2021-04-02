@@ -1,6 +1,10 @@
 package com.ebay.epd.sudoku.game;
 
-public class InvalidFieldError {
+import java.io.Serializable;
+
+public class InvalidFieldError implements Serializable {
+    private static final long serialVersionUID = -7355861616444502131L;
+
     private int x;
     private int y;
 
