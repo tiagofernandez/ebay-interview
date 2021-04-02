@@ -29,7 +29,7 @@ public class SudokuServiceTest {
         Board board = new Board();
         when(mockValidator.isValid(any())).thenReturn(BoardState.VALID);
         service.validateBoard(board);
-        assertThat(board.dealsLink, is(nullValue()));
+        assertThat(board.getDealsLink(), is(nullValue()));
     }
 
     @Test
@@ -37,7 +37,7 @@ public class SudokuServiceTest {
         Board board = new Board();
         when(mockValidator.isValid(any())).thenReturn(BoardState.COMPLETED);
         service.validateBoard(board);
-        assertThat(board.dealsLink, is("https://www.ebay.co.uk/deals"));
+        assertThat(board.getDealsLink(), is("https://www.ebay.co.uk/deals"));
     }
 
     @Configuration

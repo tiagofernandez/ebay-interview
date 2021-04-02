@@ -9,7 +9,7 @@ public class Board {
     @NotNull
     private Integer[][] fields;
 
-    public String dealsLink;
+    private String dealsLink;
     private BoardState state = BoardState.VALID;
 
     public String getId() {
