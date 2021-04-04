@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
 @Consumes("application/json")
 public class BoardResource {
     @Autowired
-    SudokuService service;
+    private SudokuService service;
 
     @GET
     public Board getBoard() {

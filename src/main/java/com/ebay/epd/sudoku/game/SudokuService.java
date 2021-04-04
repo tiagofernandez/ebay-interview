@@ -7,17 +7,14 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class SudokuService {
-    BoardLogic boardLogic = new BoardLogic();
-
     @Autowired
-    BoardLogic validator;
+    private BoardLogic boardLogic;
 
-    static Map<String, Board> boards = new HashMap<>();
+    private final Map<String, Board> boards = new HashMap<>();
 
     public Board getNewBoard() {
         Board newBoard = boardLogic.generateBoard();
         boards.put(newBoard.getId(), newBoard);
-
         return newBoard;
     }
 
@@ -26,7 +23,7 @@ public class SudokuService {
     }
 
     public void validateBoard(Board b) throws SudokuValidationException {
-        BoardState state = validator.isValid(b);
+        BoardState state = boardLogic.isValid(b);
         b.setState(state);
         if (state == BoardState.COMPLETED) {
             b.setDealsLink("https://www.ebay.co.uk/deals");

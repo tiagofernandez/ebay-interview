@@ -9,7 +9,6 @@ public class SudokuValidationException extends Exception {
     private final LinkedList<InvalidFieldError> errors;
 
     public SudokuValidationException(List<InvalidFieldError> errors) {
-        super();
         this.errors = new LinkedList<>(errors);
     }
 

@@ -9,7 +9,6 @@ public class InvalidFieldError implements Serializable {
     private int y;
 
     public InvalidFieldError(int x, int y) {
-        super();
         this.x = x;
         this.y = y;
     }
